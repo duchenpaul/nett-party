@@ -1,10 +1,10 @@
 {
-  "name": "mihomo-party",
+  "name": "nett-party",
   "version": "1.9.5",
-  "description": "Clash Party",
+  "description": "nett-party",
   "type": "module",
   "main": "./out/main/index.js",
-  "author": "mihomo-party-org",
+  "author": "nett-party-org",
   "homepage": "https://clashparty.org",
   "scripts": {
     "format": "prettier --write .",

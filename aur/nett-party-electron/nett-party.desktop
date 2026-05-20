@@ -1,10 +1,10 @@
 [Desktop Entry]
-Name=Clash Party
-Exec=mihomo-party %U
+Name=nett-party
+Exec=nett-party %U
 Terminal=false
 Type=Application
-Icon=mihomo-party
-StartupWMClass=mihomo-party
+Icon=nett-party
+StartupWMClass=nett-party
 MimeType=x-scheme-handler/clash;x-scheme-handler/mihomo;
-Comment=Clash Party
+Comment=nett-party
 Categories=Utility;

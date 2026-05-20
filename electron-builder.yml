@@ -1,5 +1,5 @@
 appId: party.mihomo.app
-productName: Clash Party
+productName: nett-party
 directories:
   buildResources: build
 files:
@@ -19,7 +19,7 @@ extraResources:
   - from: './extra/'
     to: ''
 protocols:
-  name: 'Clash Party URI Scheme'
+  name: 'nett-party URI Scheme'
   schemes:
     - 'clash'
     - 'mihomo'
@@ -27,9 +27,9 @@ win:
   target:
     - nsis
     - 7z
-  artifactName: clash-party-windows-${version}-${arch}-portable.${ext}
+  artifactName: nett-party-windows-${version}-${arch}-portable.${ext}
 nsis:
-  artifactName: clash-party-windows-${version}-${arch}-setup.${ext}
+  artifactName: nett-party-windows-${version}-${arch}-setup.${ext}
   uninstallDisplayName: ${productName}
   allowToChangeInstallationDirectory: true
   oneClick: false
@@ -47,7 +47,7 @@ mac:
     - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
     - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
   notarize: false
-  artifactName: clash-party-macos-${version}-${arch}.${ext}
+  artifactName: nett-party-macos-${version}-${arch}.${ext}
 pkg:
   allowAnywhere: false
   allowCurrentUserHome: false
@@ -56,23 +56,23 @@ pkg:
     alignment: bottomleft
     file: build/background.png
 linux:
-  executableName: mihomo-party
+  executableName: nett-party
   icon: build/icon.png
   desktop:
     entry:
-      Name: Clash Party
+      Name: nett-party
       GenericName: Proxy Client
       Comment: A GUI client based on Mihomo
       MimeType: 'x-scheme-handler/clash;x-scheme-handler/mihomo'
       Keywords: proxy;clash;mihomo;vpn;
-      StartupWMClass: mihomo-party
-      Icon: mihomo-party
+      StartupWMClass: nett-party
+      Icon: nett-party
   target:
     - deb
     - rpm
-  maintainer: mihomo-party-org
+  maintainer: nett-party-org
   category: Utility
-  artifactName: clash-party-linux-${version}-${arch}.${ext}
+  artifactName: nett-party-linux-${version}-${arch}.${ext}
 deb:
   afterInstall: 'build/linux/postinst'
   afterRemove: 'build/linux/postuninst'

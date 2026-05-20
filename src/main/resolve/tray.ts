@@ -655,7 +655,7 @@ async function updateTrayToolTip(
     status.push(t('tray.tooltip.customIcon'))
   }
 
-  tray.setToolTip(['Clash Party', ...status].join('\n'))
+  tray.setToolTip(['nett-party', ...status].join('\n'))
 }
 
 function setTrayImage(iconPath: string): void {

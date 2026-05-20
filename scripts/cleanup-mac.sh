@@ -1,7 +1,7 @@
 #!/bin/bash
 
-echo "=== Clash Party Cleanup Tool ==="
-echo "This script will remove all Clash Party related files and services."
+echo "=== nett-party Cleanup Tool ==="
+echo "This script will remove all nett-party related files and services."
 read -p "Are you sure you want to continue? (y/N) " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -17,10 +17,10 @@ sudo launchctl unload /Library/LaunchDaemons/party.mihomo.helper.plist 2>/dev/nu
 echo "Removing files..."
 sudo rm -f /Library/LaunchDaemons/party.mihomo.helper.plist
 sudo rm -f /Library/PrivilegedHelperTools/party.mihomo.helper
-sudo rm -rf "/Applications/Clash Party.app"
+sudo rm -rf "/Applications/nett-party.app"
 sudo rm -rf "/Applications/Clash\\ Party.app"
-sudo rm -rf ~/Library/Application\ Support/mihomo-party
-sudo rm -rf ~/Library/Caches/mihomo-party
+sudo rm -rf ~/Library/Application\ Support/nett-party
+sudo rm -rf ~/Library/Caches/nett-party
 sudo rm -f ~/Library/Preferences/party.mihomo.app.helper.plist
 sudo rm -f ~/Library/Preferences/party.mihomo.app.plist
 
