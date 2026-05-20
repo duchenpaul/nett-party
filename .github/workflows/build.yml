@@ -13,6 +13,7 @@ permissions: write-all
 
 jobs:
   cleanup-dev-release:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Delete Dev Release Assets
@@ -32,7 +33,7 @@ jobs:
             ALL_ASSETS="[]"
             PAGE=1
             PER_PAGE=100
-            
+
             while true; do
               echo "📄 Fetching page $PAGE..."
               ASSETS_PAGE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -40,7 +41,7 @@ jobs:
 
               PAGE_COUNT=$(echo "$ASSETS_PAGE" | jq '. | length')
               echo "📦 Found $PAGE_COUNT assets on page $PAGE"
-              
+
               if [ "$PAGE_COUNT" -eq 0 ]; then
                 echo "📋 No more assets found, stopping pagination"
                 break
@@ -52,13 +53,13 @@ jobs:
                 echo "📋 Last page reached (got $PAGE_COUNT < $PER_PAGE), stopping pagination"
                 break
               fi
-              
+
               PAGE=$((PAGE + 1))
             done
-            
+
             TOTAL_ASSET_COUNT=$(echo "$ALL_ASSETS" | jq '. | length')
             echo "📦 Total assets found across all pages: $TOTAL_ASSET_COUNT"
-            
+
             if [ "$TOTAL_ASSET_COUNT" -gt 0 ]; then
               # Delete each asset with detailed logging
               echo "$ALL_ASSETS" | jq -r '.[].id' | while read asset_id; do
@@ -67,7 +68,7 @@ jobs:
                   RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code}" -X DELETE \
                     -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                     "https://api.github.com/repos/${{ github.repository }}/releases/assets/$asset_id")
-                  
+
                   HTTP_CODE=$(echo $RESPONSE | tr -d '\n' | sed -e 's/.*HTTPSTATUS://')
                   if [ "$HTTP_CODE" = "204" ]; then
                     echo "✅ Successfully deleted asset $asset_id"
@@ -90,8 +91,8 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         run: echo "Skipping cleanup for tag release"
   windows:
+    if: false
     needs: [cleanup-dev-release]
-    if: always() && (startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch')
     strategy:
       fail-fast: false
       matrix:
@@ -170,8 +171,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   windows7:
+    if: false
     needs: [cleanup-dev-release]
-    if: always() && (startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch')
     strategy:
       fail-fast: false
       matrix:
@@ -257,8 +258,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   linux:
+    if: false
     needs: [cleanup-dev-release]
-    if: always() && (startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch')
     strategy:
       fail-fast: false
       matrix:
@@ -332,7 +333,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   macos:
-    needs: [cleanup-dev-release]
     if: always() && (startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch')
     strategy:
       fail-fast: false
@@ -367,20 +367,18 @@ jobs:
         env:
           npm_config_arch: ${{ matrix.arch }}
           npm_config_target_arch: ${{ matrix.arch }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          CSC_LINK: ${{ secrets.CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
         run: |
+          export CSC_IDENTITY_AUTO_DISCOVERY=false
           chmod +x build/pkg-scripts/postinstall build/pkg-scripts/preinstall
           pnpm build:mac --${{ matrix.arch }}
       - name: Setup temporary installer signing keychain
+        if: false
         uses: apple-actions/import-codesign-certs@v6
         with:
           p12-file-base64: ${{ secrets.CSC_INSTALLER_LINK }}
           p12-password: ${{ secrets.CSC_INSTALLER_KEY_PASSWORD }}
       - name: Sign the Apple pkg
+        if: false
         run: |
           for pkg_name in $(ls -1 dist/*.pkg); do
             pkg_name=$(ls -1 dist/*.pkg)
@@ -428,8 +426,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   macos10:
+    if: false
     needs: [cleanup-dev-release]
-    if: always() && (startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch')
     strategy:
       fail-fast: false
       matrix:
@@ -465,21 +463,19 @@ jobs:
         env:
           npm_config_arch: ${{ matrix.arch }}
           npm_config_target_arch: ${{ matrix.arch }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          CSC_LINK: ${{ secrets.CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
         run: |
+          export CSC_IDENTITY_AUTO_DISCOVERY=false
           sed -i "" -e "s/macos/catalina/" electron-builder.yml
           chmod +x build/pkg-scripts/postinstall build/pkg-scripts/preinstall
           pnpm build:mac --${{ matrix.arch }}
       - name: Setup temporary installer signing keychain
+        if: false
         uses: apple-actions/import-codesign-certs@v6
         with:
           p12-file-base64: ${{ secrets.CSC_INSTALLER_LINK }}
           p12-password: ${{ secrets.CSC_INSTALLER_KEY_PASSWORD }}
       - name: Sign the Apple pkg
+        if: false
         run: |
           for pkg_name in $(ls -1 dist/*.pkg); do
             pkg_name=$(ls -1 dist/*.pkg)
@@ -527,7 +523,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   updater:
-    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    if: false
     needs: [windows, windows7, linux, macos, macos10]
     runs-on: ubuntu-latest
     steps:
@@ -581,6 +577,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   aur-release-updater:
+    if: false
     strategy:
       fail-fast: false
       matrix:
@@ -589,7 +586,6 @@ jobs:
           - mihomo-party-electron
           - mihomo-party-bin
           - mihomo-party
-    if: startsWith(github.ref, 'refs/tags/v')
     needs: updater
     runs-on: ubuntu-latest
     steps:
@@ -626,7 +622,7 @@ jobs:
           allow_empty_commits: false
 
   aur-git-updater:
-    if: startsWith(github.ref, 'refs/heads/')
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -648,18 +644,19 @@ jobs:
           allow_empty_commits: false
 
   winget:
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: false
     name: Update WinGet Package
     needs: windows
     runs-on: ubuntu-latest
     steps:
       - name: Get Tag Name
-        run: echo "VERSION=$(echo ${{ github.ref }} | tr -d 'refs/tags/v')" >> $GITHUB_ENV
+        id: version
+        run: echo "version=$(echo ${{ github.ref }} | tr -d 'refs/tags/v')" >> $GITHUB_OUTPUT
       - name: Submit to Winget
         uses: vedantmgoyal9/winget-releaser@main
         with:
           identifier: Mihomo-Party.Mihomo-Party
-          version: ${{env.VERSION}}
-          release-tag: v${{env.VERSION}}
+          version: ${{ steps.version.outputs.version }}
+          release-tag: v${{ steps.version.outputs.version }}
           installers-regex: 'clash-party-windows-.*setup\.exe$'
           token: ${{ secrets.POMPURIN404_TOKEN }}
