@@ -37,7 +37,7 @@ nsis:
   createDesktopShortcut: always
 mac:
   target:
-    - pkg
+    - dmg
   entitlementsInherit: build/entitlements.mac.plist
   hardenedRuntime: true
   gatekeeperAssess: false
@@ -48,13 +48,6 @@ mac:
     - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
   notarize: false
   artifactName: nett-party-macos-${version}-${arch}.${ext}
-pkg:
-  allowAnywhere: false
-  allowCurrentUserHome: false
-  isRelocatable: false
-  background:
-    alignment: bottomleft
-    file: build/background.png
 linux:
   executableName: nett-party
   icon: build/icon.png
